@@ -81,15 +81,14 @@ var Simu = {
 		this.prevTime = this.curTime;
         this.curTime  = newDate.getTime() / 1000.0;  // end time in seconds
         this.deltaTime = (this.curTime - this.prevTime) // delta time in seconds
-		if( this.deltaTime > 30 ) {
-			this.deltaTime = 0;
+		if( this.deltaTime > 30.0 ) {
+			this.deltaTime = 0.0;
 		}
-		this.totalTime += this.deltaTime; //Total playtime in seconds
 		
 		//BALL MOVEMENT
 		for( var i = 0; i < this.balls.length; i++ ) {
 			if( this.balls[i].isAlive === 1 ) {
-				this.balls[i].move();
+				this.balls[i].move(this.deltaTime);
 			}
 		}
 		

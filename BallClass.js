@@ -15,7 +15,7 @@ Ball.prototype.drawSelf = function(ctx, img) {
 	ctx.drawImage(img, this.x-10, this.y-10);
 };
 
-Ball.prototype.move = function() {
+Ball.prototype.move = function(dt) {
 	//Do all of the actual gravity calculation here
 	
 	//The last thing you must do is set the new X and Y you calculated
