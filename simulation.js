@@ -8,6 +8,7 @@ BALL_IMG_SRC  = 'ball.png';
 //### START OF SIMULATION OBJECT
 var Simu = {
 	isInitialized:   0,
+	ballMade:        0,
 	canvas:          null,
 	ctx:             null,
 	balls:           [],
@@ -15,10 +16,9 @@ var Simu = {
 	curTime:         0,
 	prevTime:        0,
 	deltaTime:       0,
-	totalTime:       0,
 	//Mouse Controls Variables
-	mousePositionX:  0,
-	mousePositionY:  0,
+	mouseX:          0,
+	mouseY:          0,
 	mouseLeft:       0,
 	mouseRight:      2,
 	//Image Variables
@@ -68,12 +68,35 @@ var Simu = {
 	},
 	
 	ProcessMouseDown: function(e) {
-		
+		var mousePos = Simu.getMousePos(this.canvas, e);
+		this.mouseX = mousePos.x;
+		this.mouseY = mousePos.y;
+		if( this.ballMade === 0 ) {
+			for( var i = 0; i < this.balls.length; i++ ) {
+				if( this.balls[i].isAlive === 0 ) {
+					   this.balls[i].isAlive = 1;
+					   this.balls[i].x = this.mouseX;
+					   this.balls[i].y = this.mouseY;
+					   this.ballMade = 1;
+					   return;
+				}
+			}
+		}
+	},
+
+	ProcessMouseUp: function(event) {
+		//Make sure to set ballMade = 0; After dropping
+		this.ballMade = 0;
 	},
 	
-	ProcessMouseUp: function(e) {
-		
+	getMousePos: function(canvas, evt) {
+		var rect = canvas.getBoundingClientRect();
+		return 	{
+					x: Math.round( (evt.clientX-rect.left)/(rect.right-rect.left)*canvas.width ),
+					y: Math.round( (evt.clientY-rect.top)/(rect.bottom-rect.top)*canvas.height )
+				};
 	},
+	
 	
 	Update: function() {
 		//TIME CALCULATION
@@ -81,8 +104,8 @@ var Simu = {
 		this.prevTime = this.curTime;
         this.curTime  = newDate.getTime() / 1000.0;  // end time in seconds
         this.deltaTime = (this.curTime - this.prevTime) // delta time in seconds
-		if( this.deltaTime > 30.0 ) {
-			this.deltaTime = 0.0;
+		if( this.deltaTime > 30 ) {
+			this.deltaTime = 0;
 		}
 		
 		//BALL MOVEMENT
@@ -102,12 +125,12 @@ var Simu = {
 window.addEventListener("mousedown", doMouseDown, false);
 window.addEventListener("mouseup", doMouseUp, false);
 
-function doMouseDown() {
-	
+function doMouseDown(e) {
+	Simu.ProcessMouseDown(e);
 };
 
-function doMouseUp() {
-	
+function doMouseUp(e) {
+	Simu.ProcessMouseUp(e);
 };
 
 window.onload = function() {

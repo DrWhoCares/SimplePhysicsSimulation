@@ -9,6 +9,8 @@ function Ball(id, x, y, height) {
 
 Ball.prototype.destroy = function() {
 	this.isAlive = 0;
+	this.x = -100;
+	this.y = -100;
 };
 
 Ball.prototype.drawSelf = function(ctx, img) {
@@ -19,6 +21,9 @@ Ball.prototype.move = function(dt) {
 	//Do all of the actual gravity calculation here
 	
 	//The last thing you must do is set the new X and Y you calculated
-	this.x = 0;
-	this.y = 0;
+	//this.x;
+	this.y += 5;
+	if( this.y >= 540 ) {
+		this.destroy();
+	}
 };
