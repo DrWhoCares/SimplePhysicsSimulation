@@ -57,8 +57,8 @@ var Simu = {
 			this.ctx.drawImage(this.bkgImg, 0, 0);
 		}
 		
+		//BALLS
 		if( this.ballImgLoaded != 0 ) {
-			//BALLS
 			for( var i = 0; i < this.balls.length; i++ ) {
 				if( this.balls[i].isAlive === 1 ) {
 					this.balls[i].drawSelf(this.ctx, this.ballImg);
@@ -68,10 +68,12 @@ var Simu = {
 	},
 	
 	ProcessMouseDown: function(e) {
+		//Gets mouse coords
 		var mousePos = Simu.getMousePos(this.canvas, e);
 		this.mouseX = mousePos.x;
 		this.mouseY = mousePos.y;
-		if( this.ballMade === 0 ) {
+		//Creates a ball at mouse coords (ball x and y is CENTER of ball)
+		if( this.ballMade === 0 && this.mouseY < 540 ) {
 			for( var i = 0; i < this.balls.length; i++ ) {
 				if( this.balls[i].isAlive === 0 ) {
 					   this.balls[i].isAlive = 1;
@@ -111,7 +113,10 @@ var Simu = {
 		//BALL MOVEMENT
 		for( var i = 0; i < this.balls.length; i++ ) {
 			if( this.balls[i].isAlive === 1 ) {
-				this.balls[i].move(this.deltaTime);
+				this.balls[i].move();
+				if( this.balls[i].ynot < 10 && this.balls[i].ynot != -100 ) {
+					this.balls[i].destroy();
+				}
 			}
 		}
 		
