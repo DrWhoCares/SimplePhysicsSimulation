@@ -1,5 +1,5 @@
 var CANVAS_ID = "canvas";
-var MAX_BALLS = 10;
+var MAX_BALLS = 100;
 
 //IMAGE SOURCES
 BKG_IMG_SRC   = 'bkg.png';

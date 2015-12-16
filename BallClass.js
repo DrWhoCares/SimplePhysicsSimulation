@@ -24,6 +24,8 @@ Ball.prototype.destroy = function() {
 	this.fps = 0;
 	this.dt = 0;
 	this.ynot = -100;
+	this.ynotInv = 0;
+	this.isFalling = true;
 };
 
 Ball.prototype.drawSelf = function(ctx, img) {
@@ -31,28 +33,33 @@ Ball.prototype.drawSelf = function(ctx, img) {
 	ctx.drawImage(img, this.x-10, this.y-10);
 };
 
-//Determines the height of the ball while falling
-Ball.prototype.falling = function() {	
+//Determines the height of the ball while falling the first time
+Ball.prototype.falling = function() 
+{	
 	//Sets the first ynot
-	if( this.ynot == -100 ) {
+	if(this.ynot == -100)
+	{
 		this.ynot = 540 - this.y;
+		this.ynotInv = this.y;
 	}
-	this.dt += .033;
-	this.y = (this.y + (4.9 * this.dt * this.dt));
+	this.dt += .015625;
+	this.y = (this.ynotInv + (8*9.8 * this.dt * this.dt));
 };
 
-//Determines the height of the ball going upwards
-Ball.prototype.upward = function() {
-	this.dt -= .033;
-	this.y = (this.y - (4.9 * this.dt * this.dt));
+//Determines the height of the ball after the first bounce
+Ball.prototype.upward = function() 
+{
+	this.dt -= .015625;
+	this.y = (this.ynotInv + (8*9.8 * this.dt * this.dt));
 };
 
-Ball.prototype.bounce = function() {		
-	this.temp = Math.sqrt(9.8*2*this.ynot); //Calculates the velocity right before Impact with the ground
+Ball.prototype.bounce = function() 
+{		
+	this.temp = Math.sqrt(9.8*32*this.ynot); //Calculates the velocity right before Impact with the ground
 	this.bounceVelocity = this.temp*this.coeOfRestitution; //Calculates the velocity of the ball coming off the ground
-	this.ynot = (this.bounceVelocity * this.bounceVelocity / 19.6); //determines the max height of the balls bounce
+	this.ynot = (this.bounceVelocity * this.bounceVelocity / (19.6*2*8)); //determines the max height of the balls bounce
 	this.ynotInv = 540 - this.ynot;
-	this.dt = this.dt*.98;
+	this.dt = Math.sqrt(this.ynot/(9.8*8));
 	this.temp = 0;
 };
 
@@ -81,7 +88,7 @@ Ball.prototype.move = function() {
 	}
 	
 	//Calculate a bounce
-	if(this.y >= 540 && this.isFalling == true) {
+	if(this.y >= 540) {
 		this.isFalling = false;
 		this.isBouncing = true;
 	}
